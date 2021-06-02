@@ -1,8 +1,9 @@
 import MaterialTable from 'material-table';
+import {Link} from "@material-ui/core"
 import React, { useState, useEffect } from 'react';
 import Switch from "react-switch";
 
-const CustomerDetails = () => {
+const CustomerDetails = (props) => {
     const [data, setData] = useState([])
     const [bidArray, setBidArray] = useState([])
     const [dataToShow, setDataToShow] = useState([]);
@@ -25,6 +26,16 @@ const CustomerDetails = () => {
         { title: "Premium", field: "hasPremium" },
         { title: "Bid Amount", field: "bid_amount" },
         { title: "Bid Product", field: "bid_product" },
+        {
+            title: "Action", field: null,
+            render: function (data) {
+                return (
+                    <div onClick={() => props.history.push(`/${data.id}`)}>
+                        Details
+                    </div >
+                )
+            }
+        }
     ]
 
     function showMinBid(arr) {
@@ -125,18 +136,19 @@ const CustomerDetails = () => {
 
         simpleDataArray.map((simpleData, index) => {
             console.log("_simpleData", simpleData);
+
             simpleData["sno"] = index + 1;
-            simpleData["customer"] = (
-                <>
-                    <img
-                        src={simpleData.avatarUrl}
-                        height="40px"
-                        width="40px"
-                        style={{ borderRadius: "50%" }}
-                    />&nbsp;
-                    {simpleData.firstname} {simpleData.lastname}{" "}
-                </>
-            );
+            // simpleData["customer"] = (
+            //     <>
+            //         <img
+            //             src={simpleData.avatarUrl}
+            //             height="40px"
+            //             width="40px"
+            //             style={{ borderRadius: "50%" }}
+            //         />&nbsp;
+            //         {simpleData.firstname} {simpleData.lastname}{" "}
+            //     </>
+            // );
 
             if (showMaxToggle) {
                 simpleData["bid_amount"] = getMaximumAmount(simpleData.bids);
