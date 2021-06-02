@@ -1,9 +1,30 @@
 import MaterialTable from 'material-table';
 import {Link} from "@material-ui/core"
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,forwardRef } from 'react';
 import Switch from "react-switch";
 
+import ArrowDownward from '@material-ui/icons/ArrowDownward';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
+import ChevronRight from '@material-ui/icons/ChevronRight';
+import Clear from '@material-ui/icons/Clear';
+import FilterList from '@material-ui/icons/FilterList';
+import FirstPage from '@material-ui/icons/FirstPage';
+import LastPage from '@material-ui/icons/LastPage';
+import Search from '@material-ui/icons/Search';
+
 const CustomerDetails = (props) => {
+
+    const tableIcons = {
+        Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
+        FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+        LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+        NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+        PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+        ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+        Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+        SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
+      };
+
     const [data, setData] = useState([])
     const [bidArray, setBidArray] = useState([])
     const [dataToShow, setDataToShow] = useState([]);
@@ -15,8 +36,9 @@ const CustomerDetails = (props) => {
             render: function (data) {
                 // console.log("--------",data)
                 return (
-                    <div>
-                        <img src={data.avatarUrl} height="40px" width="40px" style={{ borderRadius: "50%" }} /> {data.firstname} {data.lastname}
+                    <div >
+                        <div ><img src={data.avatarUrl} height="40px" width="40px" style={{ borderRadius: "50%" }} /> </div>
+                        <div>{data.firstname} {data.lastname}</div>
                     </div>
                 )
             },
@@ -27,11 +49,11 @@ const CustomerDetails = (props) => {
         { title: "Bid Amount", field: "bid_amount" },
         { title: "Bid Product", field: "bid_product" },
         {
-            title: "Action", field: null,
+            title: "Details", field: null,
             render: function (data) {
                 return (
-                    <div onClick={() => props.history.push(`/${data.id}`)}>
-                        Details
+                    <div style={{cursor:"pointer",paddingLeft:20}} onClick={() => props.history.push(`/${data.id}`)}>
+                        <i className="fa fa-external-link-square" aria-hidden="true"></i>
                     </div >
                 )
             }
@@ -176,10 +198,12 @@ const CustomerDetails = (props) => {
 
     return (
         <>
-            <h1>AMan</h1>
-            <Switch onChange={handleShowMaxToggle} checked={showMaxToggle} />
+            {/* <h1>AMan</h1> */}<div className="d-flex mt-2">
+            <p className="mx-3">Show Highest Bid</p><Switch onChange={handleShowMaxToggle} checked={showMaxToggle} />
+            </div>
             <MaterialTable
-                title="Customer Bidding"
+            icons={tableIcons}
+                title="Customer Bidding Table"
                 data={data}
                 columns={columns}
             />
